@@ -82,6 +82,14 @@ tamanhos = ["pequeno", "medio", "grande"]
 
 tamanho = "pequeno"
 
+#Flag que indica se esta havendo redimensionamento
+resize_clicado=0
+
+#Flags que indicam esta havendo ou nao redimensionamento da area desenhavel
+resize_baixo=0 
+resize_sudeste=0
+resize_direita=0
+
 def drawMenu():
     global largura
     global altura
@@ -453,18 +461,49 @@ def reshape(l, a):
     glViewport(0, 0, l, a)
     glLoadIdentity()
     gluOrtho2D(0, l, a, 0) 
- 
+
+#Funcao chamada toda vez que algum botao do mouse for clicado
 def mouse(botao, estado, x, y):
     global coordMouse
     global cor1
     global cor2
     
+    global coordMouse
+    global resize_baixo
+    global resize_sudeste
+    global resize_direita
+    global resize_clicado
+    
     coordMouse = [x, y]
     
+    if botao == GLUT_LEFT_BUTTON:
+        if resize_clicado:
+            resize_clicado=0
+            resize_baixo=0
+            resize_direita=0
+            resize_sudeste=0
+            glutSetCursor(GLUT_CURSOR_LEFT_ARROW) 
+            
+        else:
+            #redimensionar por baixo
+            if(dentro(coordMouse, (coordRedimensionar[0][0]-8, coordRedimensionar[0][0]+8, coordRedimensionar[0][1]-8, coordRedimensionar[0][1]+8))):
+                resize_baixo=1
+                resize_clicado=1
+                
+            #redimensionar pela direita
+            if(dentro(coordMouse, (coordRedimensionar[1][0]-8, coordRedimensionar[1][0]+8, coordRedimensionar[1][1]-8, coordRedimensionar[1][1]+8))):
+                resize_direita=1
+                resize_clicado=1
+            
+            #redimensionar pelo sudeste
+            if(dentro(coordMouse, (coordRedimensionar[2][0]-8, coordRedimensionar[2][0]+8, coordRedimensionar[2][1]-8, coordRedimensionar[2][1]+8))):
+                resize_sudeste=1
+                resize_clicado=1
+        
     #muda o cursor quando dentro do canvas
-    if(dentro(coordMouse, coordCanvas)):
-        glutSetCursor(GLUT_CURSOR_DESTROY)
-    else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
+    #if(dentro(coordMouse, coordCanvas)):
+    #    glutSetCursor(GLUT_CURSOR_DESTROY)
+    #else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
     
     
     
@@ -497,28 +536,32 @@ def mouse(botao, estado, x, y):
 def movimentoMouse(x, y):
     global coordMouse
     coordMouse = [x, y]
-    if(dentro(coordMouse, coordCanvas)):
-        glutSetCursor(GLUT_CURSOR_DESTROY)
-    else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
+    #if(dentro(coordMouse, coordCanvas)):
+    #    glutSetCursor(GLUT_CURSOR_DESTROY)
+    #else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)  
+        
+    glutPostRedisplay()
+
+
+def arraste(x,y):
+    global coordMouse
+    coordMouse = [x, y]
     
-    #redimensionar por baixo
-    if(dentro(coordMouse, (coordRedimensionar[0][0]-8, coordRedimensionar[0][0]+8, coordRedimensionar[0][1]-8, coordRedimensionar[0][1]+8))):
+    if resize_baixo:
         glutSetCursor(GLUT_CURSOR_UP_DOWN)
         coordCanvas[3] = y
         coordRedimensionar[0][1] = y + 3 #sul  #+3 de offset
         coordRedimensionar[2][1] = y + 3 #sudeste
         coordRedimensionar[1][1] = (coordCanvas[3]+coordCanvas[2])/2#leste
         
-    #redimensionar pela direita
-    if(dentro(coordMouse, (coordRedimensionar[1][0]-8, coordRedimensionar[1][0]+8, coordRedimensionar[1][1]-8, coordRedimensionar[1][1]+8))):
+    if resize_direita:
         glutSetCursor(GLUT_CURSOR_LEFT_RIGHT)
         coordCanvas[1] = x
         coordRedimensionar[0][0] = (coordCanvas[1]+coordCanvas[0])/2 #sul
         coordRedimensionar[2][0] = x + 3 #sudeste
         coordRedimensionar[1][0] = x + 3 #leste
-    
-    #redimensionar pelo sudeste
-    if(dentro(coordMouse, (coordRedimensionar[2][0]-8, coordRedimensionar[2][0]+8, coordRedimensionar[2][1]-8, coordRedimensionar[2][1]+8))):
+        
+    if resize_sudeste:
         glutSetCursor(GLUT_CURSOR_TOP_LEFT_CORNER)
         coordCanvas[3] = y
         coordCanvas[1] = x
@@ -528,8 +571,9 @@ def movimentoMouse(x, y):
         coordRedimensionar[0][0] = (coordCanvas[1]+coordCanvas[0])/2 #sul
         coordRedimensionar[2][0] = x + 3 #sudeste
         coordRedimensionar[1][0] = x + 3 #leste
+        
+    glutPostRedisplay() 
     
-    glutPostRedisplay()
  
 #configuracao da janela
 glutInit(sys.argv) 
@@ -541,5 +585,6 @@ init()
 glutDisplayFunc(display)
 glutReshapeFunc(reshape)
 glutMouseFunc(mouse)
-glutMotionFunc(movimentoMouse);
+glutPassiveMotionFunc(movimentoMouse);
+glutMotionFunc(arraste);
 glutMainLoop()
