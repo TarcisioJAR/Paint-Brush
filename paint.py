@@ -356,13 +356,13 @@ def drawStatus():
     glVertex2f(largura,  altura-25)
     glEnd()
     
-    x = str(coordMouse[0] - coordCanvas[0])
-    y = str(coordMouse[1] - coordCanvas[2])
-    if((int(x) < 0) or (int(y) < 0)
-                    or (int(x) > coordCanvas[1] - coordCanvas[0])
-                    or (int(y) > coordCanvas[3] - coordCanvas[2])):
+    x = coordMouse[0] - coordCanvas[0]
+    y = coordMouse[1] - coordCanvas[2]
+    if((x < 0) or (y < 0)
+                    or (x > coordCanvas[1] - coordCanvas[0])
+                    or (y > coordCanvas[3] - coordCanvas[2])):
         coord = ''
-    else: coord = '{}, {}px'.format(x, y)
+    else: coord = '{}, {}px'.format(str(x), str(y))
     glColor3f(0, 0, 0)
     glRasterPos2f(10, altura-10)
     for letra in coord:
