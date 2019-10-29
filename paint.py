@@ -74,7 +74,7 @@ ferramenta = "lapis"
 
 preenchimento = False
                 
-coordTamanhos = [   (408, 483, 16, 34), #pequeno
+coordTamanhos = [   (408, 483, 17, 35), #pequeno
                     (408, 483, 36, 54), #medio
                     (408, 483, 55, 73)] #grande
 
@@ -294,15 +294,15 @@ def drawMenu():
     
     #linhas-tamanhos
     glBegin(GL_QUADS)
-    glVertex2f(410, 27)
-    glVertex2f(480, 27)
-    glVertex2f(480, 28)
-    glVertex2f(410, 28)
+    glVertex2f(410, 25)
+    glVertex2f(480, 25)
+    glVertex2f(480, 26)
+    glVertex2f(410, 26)
     
-    glVertex2f(410, 42)
-    glVertex2f(480, 42)
-    glVertex2f(480, 45)
-    glVertex2f(410, 45)
+    glVertex2f(410, 44)
+    glVertex2f(480, 44)
+    glVertex2f(480, 47)
+    glVertex2f(410, 47)
     
     glVertex2f(410, 60)
     glVertex2f(480, 60)
@@ -391,7 +391,6 @@ def init():
 
 def display():
     global ferramenta
-    global preenchimento
     global tamanho
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -401,9 +400,9 @@ def display():
     drawCanvas()
     
     #seleciona botao
-    for i in range(len(coordBotoes)):
-        coord = coordBotoes[i]
-        if(dentro(coordMouse, coord)):
+    for i in range(len(ferramentas)):
+        if(ferramentas[i] == ferramenta):
+            coord = coordBotoes[i]
             glBegin(GL_LINE_STRIP)
             glColor3f(rgb(98), rgb(162), rgb(228))
             glVertex2f(coord[0]-1, coord[2])
@@ -412,24 +411,20 @@ def display():
             glVertex2f(coord[1]+1, coord[2])
             glVertex2f(coord[0]-1, coord[2])
             glEnd()
-            
-            ferramenta = ferramentas[i]
     
     #seleciona preenchimento
-    if(dentro(coordMouse, (330, 345, 20, 35))):
+    if(preenchimento == True):
         glBegin(GL_LINE_STRIP)
         glColor3f(rgb(98), rgb(162), rgb(228))
         glVertex2f(331, 26)
         glVertex2f(335, 33)
         glVertex2f(343, 22)
         glEnd()
-        
-        preenchimento = True
     
     #seleciona tamanho
-    for i in range(len(coordTamanhos)):
-        coord = coordTamanhos[i]
-        if(dentro(coordMouse, coord)):
+    for i in range(len(tamanhos)):
+        if(tamanhos[i] == tamanho):
+            coord = coordTamanhos[i]
             glBegin(GL_LINE_STRIP)
             glColor3f(rgb(98), rgb(162), rgb(228))
             glVertex2f(coord[0]-1, coord[2])
@@ -438,8 +433,6 @@ def display():
             glVertex2f(coord[1]+1, coord[2])
             glVertex2f(coord[0]-1, coord[2])
             glEnd()
-            
-            tamanho = tamanhos[i]
     
     glutSwapBuffers()
   
@@ -458,6 +451,9 @@ def mouse(botao, estado, x, y):
     global coordMouse
     global cor1
     global cor2
+    global ferramenta
+    global preenchimento
+    global tamanho
     
     coordMouse = [x, y]
     
@@ -466,7 +462,27 @@ def mouse(botao, estado, x, y):
         glutSetCursor(GLUT_CURSOR_DESTROY)
     else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
     
+    #muda ferramenta
+    for i in range(len(coordBotoes)):
+        coord = coordBotoes[i]
+        if(dentro(coordMouse, coord)):
+            if(estado == 0):
+                ferramenta = ferramentas[i]
     
+    #muda preenchimento
+    if(dentro(coordMouse, (330, 345, 20, 35))):
+        if(estado == 0):
+            if(preenchimento == False):
+                preenchimento = True
+            elif(preenchimento == True):
+                preenchimento = False
+    
+    #muda tamanho
+    for i in range(len(coordTamanhos)):
+        coord = coordTamanhos[i]
+        if(dentro(coordMouse, coord)):
+            if(estado == 0):
+                tamanho = tamanhos[i]
     
     #seleciona cores
     for i in range(len(cores)):
