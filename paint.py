@@ -2,6 +2,7 @@ import sys
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+from ferramentasDesenho import *
 
 coordMouse = [0,0] #x, y
 coordCanvas = [10, 800, 110, 600] #x1, x2, y1, y2
@@ -89,6 +90,10 @@ resize_clicado=0
 resize_baixo=0 
 resize_sudeste=0
 resize_direita=0
+
+estadoMouse = -1
+coordClica = (0, 0)
+coordSolta = (0, 0)
 
 def drawMenu():
     global largura
@@ -381,6 +386,8 @@ def drawRedimensionar():
 
 def drawCanvas():
     global coordCanvas
+    global coordClica
+    global coordSolta
     
     glColor3f(1, 1, 1)
     glBegin(GL_QUADS)
@@ -391,13 +398,13 @@ def drawCanvas():
     glEnd()
     
     drawRedimensionar()
-
-def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
-    if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
-        return True
-    else:
-        return False
-        
+    
+    if(estadoMouse == 0 & dentro(coordMouse, coordCanvas)):
+        coordClica = coordMouse
+    if(estadoMouse == 1):
+        coordSolta = coordMouse
+        if(dentro(coordClica, coordCanvas)):
+            novoDesenho(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
 
 def init():
     glClearColor(rgb(212), rgb(221), rgb(235), 0)
@@ -475,8 +482,10 @@ def mouse(botao, estado, x, y):
     global resize_sudeste
     global resize_direita
     global resize_clicado
+    global estadoMouse
     
     coordMouse = [x, y]
+    estadoMouse = estado
     
     if botao == GLUT_LEFT_BUTTON:
         if resize_clicado:
