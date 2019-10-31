@@ -562,6 +562,15 @@ def mouse(botao, estado, x, y):
         glVertex2f(578, 20)
         glEnd()
     
+    glPointSize(1)
+    glBegin(GL_POINTS)
+    for i in range(coordCanvas[1] - coordCanvas[0]):
+        for j in range(coordCanvas[3] - coordCanvas[2]):
+            if(coresCanvas[i][j] != []):
+                glColor3f(coresCanvas[i][j][0], coresCanvas[i][j][1], coresCanvas[i][j][2])
+                glVertex(i, j)
+    glEnd()
+    
     glutPostRedisplay()
     
 def movimentoMouse(x, y):

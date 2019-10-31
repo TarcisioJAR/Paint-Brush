@@ -4,6 +4,14 @@ from OpenGL.GLUT import *
 
 cCanvas = []
 
+#as cores dos pixels sao guardadas em uma matriz estatica
+coresCanvas = []
+for i in range(2000): #2000 colunas
+    linha = []
+    for j in range(1000): #1000 linhas
+        linha.append([])
+    coresCanvas.append(linha)
+
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
         return True
@@ -27,6 +35,8 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, t
         quadrado(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "triangulo"):
         triangulo(coord1, coord2, cor1, cor2, preenchimento)
+    elif(ferramenta == "circulo"):
+        circulo(coord1, coord2, cor1, cor2, preenchimento)
         
 def bresenham(cInicial, cFinal, cor):
     
@@ -181,3 +191,41 @@ def triangulo(cInicial, cFinal, cor1, cor2, preenchimento):
     bresenham((int((x2 + x1)/2), y1), (x1, y2), cor1)
     bresenham((int((x2 + x1)/2), y1), (x2, y2), cor1)
     bresenham((x1, y2), (x2, y2), cor1)
+
+def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
+    x1 = cInicial[0]
+    y1 = cInicial[1]
+    x2 = 0
+    y2 = cFinal[1]
+    
+    d = 1 - y2
+    
+    glColor3f(cor1[0], cor1[1], cor1[2])
+    glBegin(GL_POINTS)
+    if(dentro((x2+x1, y2+y1), cCanvas)): glVertex2f(x2+x1, y2+y1)
+    if(dentro((x1-y2, x2+y1), cCanvas)): glVertex2f(x1-y2, x2+y1)
+    if(dentro((x1-y2, y1-x2), cCanvas)): glVertex2f(x1-y2, y1-x2)
+    if(dentro((x1-x2, y1-y2), cCanvas)): glVertex2f(x1-x2, y1-y2)
+    if(dentro((x1-x2, y1+y2), cCanvas)): glVertex2f(x1-x2, y1+y2)
+    if(dentro((x2+x1, y1-y2), cCanvas)): glVertex2f(x2+x1, y1-y2)
+    if(dentro((y2+x1, y1-x2), cCanvas)): glVertex2f(y2+x1, y1-x2)
+    if(dentro((y2+x1, x2+y1), cCanvas)): glVertex2f(y2+x1, x2+y1)
+    
+    while(y2 > x2):
+        if(d < 0):
+            d += (2 * x2) + 3
+        else:
+            d += 2 * (x2 - y2) + 5
+            y2 -= 1
+        x2 += 1
+        if(dentro((x2+x1, y2+y1), cCanvas)): glVertex2f(x2+x1, y2+y1)
+        if(dentro((x1-y2, x2+y1), cCanvas)): glVertex2f(x1-y2, x2+y1)
+        if(dentro((x1-y2, y1-x2), cCanvas)): glVertex2f(x1-y2, y1-x2)
+        if(dentro((x1-x2, y1-y2), cCanvas)): glVertex2f(x1-x2, y1-y2)
+        if(dentro((x1-x2, y1+y2), cCanvas)): glVertex2f(x1-x2, y1+y2)
+        if(dentro((x2+x1, y1-y2), cCanvas)): glVertex2f(x2+x1, y1-y2)
+        if(dentro((y2+x1, y1-x2), cCanvas)): glVertex2f(y2+x1, y1-x2)
+        if(dentro((y2+x1, x2+y1), cCanvas)): glVertex2f(y2+x1, x2+y1)
+    
+    
+    glEnd()
