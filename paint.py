@@ -79,9 +79,9 @@ coordTamanhos = [   (408, 483, 17, 35), #pequeno
                     (408, 483, 36, 54), #medio
                     (408, 483, 55, 73)] #grande
 
-tamanhos = ["pequeno", "medio", "grande"]
+tamanhos = [1, 3, 8] #pequeno, medio e grande
 
-tamanho = "pequeno"
+tamanho = 1
 
 #Flag que indica se esta havendo redimensionamento
 resize_clicado=0
@@ -455,6 +455,13 @@ def display():
             glVertex2f(coord[0]-1, coord[2])
             glEnd()
     
+    for c in coresCanvas:
+        glPointSize(c[3])
+        glBegin(GL_POINTS)
+        glColor3f(c[2][0], c[2][1], c[2][2])
+        glVertex(c[0], c[1])
+        glEnd()
+    
     glutSwapBuffers()
   
 def reshape(l, a):
@@ -561,15 +568,6 @@ def mouse(botao, estado, x, y):
         glVertex2f(578, 50)
         glVertex2f(578, 20)
         glEnd()
-    
-    glPointSize(1)
-    glBegin(GL_POINTS)
-    for i in range(coordCanvas[1] - coordCanvas[0]):
-        for j in range(coordCanvas[3] - coordCanvas[2]):
-            if(coresCanvas[i][j] != []):
-                glColor3f(coresCanvas[i][j][0], coresCanvas[i][j][1], coresCanvas[i][j][2])
-                glVertex(i, j)
-    glEnd()
     
     glutPostRedisplay()
     

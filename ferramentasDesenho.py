@@ -6,11 +6,6 @@ cCanvas = []
 
 #as cores dos pixels sao guardadas em uma matriz estatica
 coresCanvas = []
-for i in range(2000): #2000 colunas
-    linha = []
-    for j in range(1000): #1000 linhas
-        linha.append([])
-    coresCanvas.append(linha)
 
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
@@ -22,15 +17,10 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, t
     global cCanvas
     cCanvas = canvas
     
-    if(tamanho == "pequeno"):
-        glPointSize(1)
-    elif(tamanho == "medio"):
-        glPointSize(3)
-    elif(tamanho == "grande"):
-        glPointSize(8)
+    glPointSize(tamanho)
     
     if(ferramenta == "reta"):
-        bresenham(coord1, coord2, cor1)
+        bresenham(coord1, coord2, cor1, tamanho)
     elif(ferramenta == "quadrado"):
         quadrado(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "triangulo"):
@@ -38,7 +28,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, t
     elif(ferramenta == "circulo"):
         circulo(coord1, coord2, cor1, cor2, preenchimento)
         
-def bresenham(cInicial, cFinal, cor):
+def bresenham(cInicial, cFinal, cor, tamanho):
     
     x1 = cInicial[0]
     y1 = cInicial[1]
@@ -62,7 +52,9 @@ def bresenham(cInicial, cFinal, cor):
         
         if(dydx2 < 0):
             for i in range(dx):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -71,7 +63,9 @@ def bresenham(cInicial, cFinal, cor):
                 x += 1
         else:
             for i in range(dy):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
