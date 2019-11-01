@@ -51,8 +51,6 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
     
     if(ferramenta == "reta"):
         bresenham(coord1, coord2)
-    elif(ferramenta == "pipeta"):
-        pipeta(coord1)
     elif(ferramenta == "quadrado"):
         quadrado(coord1, coord2, preenchimento)
     elif(ferramenta == "triangulo"):
@@ -61,6 +59,8 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
         circulo(coord1, coord2, preenchimento)
     elif(ferramenta == "lapis"):
         ultimaCoord = -1
+    elif(ferramenta == "borracha"):
+        borracha(coord1)
     
 
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
@@ -90,6 +90,8 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         if ultimaCoord == -1: ultimaCoord = coord1
         bresenham(ultimaCoord, coord2)
         ultimaCoord = coord2
+    elif(ferramenta == "borracha"):
+        borracha(coord2)
         
 def bresenhamSemGravar(cInicial, cFinal):
     
@@ -625,8 +627,17 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
             glVertex2f(y2+x1, x2+y1)
     
     glEnd()
-
-def pipeta(coord):
+    
+def borracha(coord):
+    
     x = coord[0]
     y = coord[1]
-    return
+    
+    x1 = coord[0] - tamanho*10
+    x2 = coord[0] + tamanho*10
+    y1 = coord[1] - tamanho*10
+    y2 = coord[1] + tamanho*10
+    
+    if (x, y) in coordsPintadas:
+        if dentro(coord, (x1, x2, y1, y2)):
+            coordsPintadas.remove((x, y))
