@@ -95,6 +95,9 @@ estadoMouse = -1
 coordClica = (0, 0)
 coordSolta = (0, 0)
 
+estadoMouseAnterior = 1
+clickInicial = 1
+
 def drawMenu():
     global largura
     global altura
@@ -384,10 +387,13 @@ def drawRedimensionar():
     glVertex2f(coordRedimensionar[2][0], coordRedimensionar[2][1])
     glEnd()
 
+
 def drawCanvas():
     global coordCanvas
     global coordClica
     global coordSolta
+    global estadoMouseAnterior
+    global clickInicial
     
     glColor3f(1, 1, 1)
     glBegin(GL_QUADS)
@@ -399,12 +405,19 @@ def drawCanvas():
     
     drawRedimensionar()
     
-    if(estadoMouse == 0 & dentro(coordMouse, coordCanvas)):
-        coordClica = coordMouse
-    if(estadoMouse == 1):
+    if(estadoMouse == 0 and dentro(coordMouse, coordCanvas)):
+        if clickInicial:
+            coordClica = coordMouse
+            clickInicial = 0
         coordSolta = coordMouse
         if(dentro(coordClica, coordCanvas)):
-            novoDesenho(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+            novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+        estadoMouseAnterior = 0
+    if(estadoMouse == 1 and estadoMouseAnterior == 0):  
+        coordSolta = coordMouse
+        novoDesenho(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+        estadoMouseAnterior = 1
+        clickInicial = 1
 
 def init():
     glClearColor(rgb(212), rgb(221), rgb(235), 0)

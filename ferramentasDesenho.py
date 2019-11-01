@@ -22,12 +22,170 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, t
     if(ferramenta == "reta"):
         bresenham(coord1, coord2, cor1, tamanho)
     elif(ferramenta == "quadrado"):
-        quadrado(coord1, coord2, cor1, cor2, preenchimento)
+        quadrado(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+    elif(ferramenta == "triangulo"):
+        triangulo(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+    elif(ferramenta == "circulo"):
+        circulo(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+
+def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tamanho):
+    global cCanvas
+    cCanvas = canvas
+    
+    glPointSize(tamanho)
+    
+    if(ferramenta == "reta"):
+        bresenhamSemGravar(coord1, coord2, cor1)
+    elif(ferramenta == "quadrado"):
+        quadradoSemGravar(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "triangulo"):
         triangulo(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "circulo"):
         circulo(coord1, coord2, cor1, cor2, preenchimento)
         
+def bresenhamSemGravar(cInicial, cFinal, cor):
+    
+    x1 = cInicial[0]
+    y1 = cInicial[1]
+    x2 = cFinal[0]
+    y2 = cFinal[1]
+    
+    glBegin(GL_POINTS)
+    glColor3f(cor[0], cor[1], cor[2])
+    if(dentro((x1, y1), cCanvas)):
+        glVertex2f(x1, y1)
+    
+    if((x1 <= x2) & (y1 >= y2)): #1o quadrante
+        dx    = x2 - x1
+        dy    = y1 - y2
+        dy2   = 2 * dy
+        dx2   = 2 * dx
+        dydx2 = dy2 - 2 * dx
+        pantX  = dy2 - dx
+        pantY  = dx2 - dy
+        x = x1
+        y = y1
+        
+        if(dydx2 < 0):
+            for i in range(dx):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantX < 0:
+                    pantX = pantX + dy2 
+                else:
+                    pantX = pantX + dydx2
+                    y -= 1
+                x += 1
+        else:
+            for i in range(dy):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantY < 0:
+                    pantY = pantY + dx2 
+                else:
+                    pantY = pantY - dydx2
+                    x += 1
+                y -= 1
+    
+    elif((x1 > x2) & (y1 > y2)): #2o quadrante
+        dx    = x1 - x2
+        dy    = y1 - y2
+        dy2   = 2 * dy
+        dx2   = 2 * dx
+        dydx2 = dy2 - 2 * dx
+        pantX  = dy2 - dx
+        pantY  = dx2 - dy
+        x = x1
+        y = y1
+        
+        if(dydx2 < 0):
+            for i in range(dx):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantX < 0:
+                    pantX = pantX + dy2 
+                else:
+                    pantX = pantX + dydx2
+                    y -= 1
+                x -= 1
+        else:
+            for i in range(dy):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantY < 0:
+                    pantY = pantY + dx2 
+                else:
+                    pantY = pantY - dydx2
+                    x -= 1
+                y -= 1
+    
+    elif((x1 >= x2) & (y1 <= y2)): #3o quadrante
+        dx    = x1 - x2
+        dy    = y2 - y1
+        dy2   = 2 * dy
+        dx2   = 2 * dx
+        dydx2 = dy2 - 2 * dx
+        pantX  = dy2 - dx
+        pantY  = dx2 - dy
+        x = x1
+        y = y1
+        
+        if(dydx2 < 0):
+            for i in range(dx):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantX < 0:
+                    pantX = pantX + dy2 
+                else:
+                    pantX = pantX + dydx2
+                    y += 1
+                x -= 1
+        else:
+            for i in range(dy):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantY < 0:
+                    pantY = pantY + dx2 
+                else:
+                    pantY = pantY - dydx2
+                    x -= 1
+                y += 1
+    
+    elif((x1 < x2) & (y1 < y2)): #4o quadrante
+        dx    = x2 - x1
+        dy    = y2 - y1
+        dy2   = 2 * dy
+        dx2   = 2 * dx
+        dydx2 = dy2 - 2 * dx
+        pantX  = dy2 - dx
+        pantY  = dx2 - dy
+        x = x1
+        y = y1
+        
+        if(dydx2 < 0):
+            for i in range(dx):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantX < 0:
+                    pantX = pantX + dy2 
+                else:
+                    pantX = pantX + dydx2
+                    y += 1
+                x += 1
+        else:
+            for i in range(dy):
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                if pantY < 0:
+                    pantY = pantY + dx2 
+                else:
+                    pantY = pantY - dydx2
+                    x += 1
+                y += 1
+    
+    glEnd()
+
+
 def bresenham(cInicial, cFinal, cor, tamanho):
     
     x1 = cInicial[0]
@@ -37,7 +195,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
     
     glBegin(GL_POINTS)
     glColor3f(cor[0], cor[1], cor[2])
-    if(dentro((x1, y1), cCanvas)): glVertex2f(x1, y1)
+    if(dentro((x1, y1), cCanvas)):
+        glVertex2f(x1, y1)
+        coresCanvas.append((x1, y1, cor, tamanho))
     
     if((x1 <= x2) & (y1 >= y2)): #1o quadrante
         dx    = x2 - x1
@@ -86,7 +246,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         
         if(dydx2 < 0):
             for i in range(dx):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -95,7 +257,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
                 x -= 1
         else:
             for i in range(dy):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -116,7 +280,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         
         if(dydx2 < 0):
             for i in range(dx):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -125,7 +291,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
                 x -= 1
         else:
             for i in range(dy):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -146,7 +314,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         
         if(dydx2 < 0):
             for i in range(dx):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -155,7 +325,9 @@ def bresenham(cInicial, cFinal, cor, tamanho):
                 x += 1
         else:
             for i in range(dy):
-                if(dentro((x, y), cCanvas)): glVertex2f(x, y)
+                if(dentro((x, y), cCanvas)):
+                    glVertex2f(x, y)
+                    coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -165,16 +337,27 @@ def bresenham(cInicial, cFinal, cor, tamanho):
     
     glEnd()
 
-def quadrado(cInicial, cFinal, cor1, cor2, preenchimento):
+def quadrado(cInicial, cFinal, cor1, cor2, preenchimento, tamanho):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenham((x1, y1), (x1, y2), cor1)
-    bresenham((x1, y2), (x2, y2), cor1)
-    bresenham((x2, y2), (x2, y1), cor1)
-    bresenham((x2, y1), (x1, y1), cor1)
+    bresenham((x1, y1), (x1, y2), cor1, tamanho)
+    bresenham((x1, y2), (x2, y2), cor1, tamanho)
+    bresenham((x2, y2), (x2, y1), cor1, tamanho)
+    bresenham((x2, y1), (x1, y1), cor1, tamanho)
+
+def quadradoSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+    x1 = cInicial[0]
+    y1 = cInicial[1]
+    x2 = cFinal[0]
+    y2 = cFinal[1]
+    
+    bresenhamSemGravar((x1, y1), (x1, y2), cor1)
+    bresenhamSemGravar((x1, y2), (x2, y2), cor1)
+    bresenhamSemGravar((x2, y2), (x2, y1), cor1)
+    bresenhamSemGravar((x2, y1), (x1, y1), cor1)
     
 def triangulo(cInicial, cFinal, cor1, cor2, preenchimento):
     x1 = cInicial[0]
