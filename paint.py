@@ -81,8 +81,6 @@ coordTamanhos = [   (408, 483, 17, 35), #pequeno
 
 tamanhos = [1, 3, 8] #pequeno, medio e grande
 
-tamanho = 1
-
 #Flag que indica se esta havendo redimensionamento
 resize_clicado=0
 
@@ -410,8 +408,7 @@ def drawCanvas():
             coordClica = coordMouse
             clickInicial = 0
         coordSolta = coordMouse
-        if(dentro(coordClica, coordCanvas)):
-            novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+        novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
         estadoMouseAnterior = 0
     if(estadoMouse == 1 and estadoMouseAnterior == 0):  
         coordSolta = coordMouse
@@ -472,7 +469,8 @@ def display():
         glPointSize(c[3])
         glBegin(GL_POINTS)
         glColor3f(c[2][0], c[2][1], c[2][2])
-        glVertex(c[0], c[1])
+        if(dentro((c[0], c[1]), coordCanvas)): glVertex(c[0], c[1])
+        else: coresCanvas.remove(c)
         glEnd()
     
     glutSwapBuffers()
@@ -483,7 +481,6 @@ def reshape(l, a):
     largura = l
     altura = a
     
-    #glMatrixMode(GL_MODELVIEW)
     glViewport(0, 0, l, a)
     glLoadIdentity()
     gluOrtho2D(0, l, a, 0) 
@@ -531,11 +528,6 @@ def mouse(botao, estado, x, y):
                 resize_sudeste=1
                 resize_clicado=1
         
-    #muda o cursor quando dentro do canvas
-    #if(dentro(coordMouse, coordCanvas)):
-    #    glutSetCursor(GLUT_CURSOR_DESTROY)
-    #else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
-    
     #muda ferramenta
     for i in range(len(coordBotoes)):
         coord = coordBotoes[i]
@@ -586,10 +578,8 @@ def mouse(botao, estado, x, y):
     
 def movimentoMouse(x, y):
     global coordMouse
+    
     coordMouse = [x, y]
-    #if(dentro(coordMouse, coordCanvas)):
-    #    glutSetCursor(GLUT_CURSOR_DESTROY)
-    #else: glutSetCursor(GLUT_CURSOR_LEFT_ARROW)  
         
     glutPostRedisplay()
 

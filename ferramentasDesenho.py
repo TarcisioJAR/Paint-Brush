@@ -4,7 +4,8 @@ from OpenGL.GLUT import *
 
 cCanvas = []
 
-#as cores dos pixels sao guardadas em uma matriz estatica
+tamanho = 1
+
 coresCanvas = []
 
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
@@ -13,24 +14,30 @@ def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     else:
         return False
 
-def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tamanho):
+def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tam):
     global cCanvas
+    global tamanho
+    
     cCanvas = canvas
+    tamanho = tam
     
     glPointSize(tamanho)
     
     if(ferramenta == "reta"):
-        bresenham(coord1, coord2, cor1, tamanho)
+        bresenham(coord1, coord2, cor1)
     elif(ferramenta == "quadrado"):
-        quadrado(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+        quadrado(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "triangulo"):
-        triangulo(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+        triangulo(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "circulo"):
-        circulo(coord1, coord2, cor1, cor2, preenchimento, tamanho)
+        circulo(coord1, coord2, cor1, cor2, preenchimento)
 
-def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tamanho):
+def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tam):
     global cCanvas
+    global tamanho
+    
     cCanvas = canvas
+    tamanho = tam
     
     glPointSize(tamanho)
     
@@ -39,9 +46,9 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, cor1, cor2, preench
     elif(ferramenta == "quadrado"):
         quadradoSemGravar(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "triangulo"):
-        triangulo(coord1, coord2, cor1, cor2, preenchimento)
+        trianguloSemGravar(coord1, coord2, cor1, cor2, preenchimento)
     elif(ferramenta == "circulo"):
-        circulo(coord1, coord2, cor1, cor2, preenchimento)
+        circuloSemGravar(coord1, coord2, cor1, cor2, preenchimento)
         
 def bresenhamSemGravar(cInicial, cFinal, cor):
     
@@ -186,7 +193,7 @@ def bresenhamSemGravar(cInicial, cFinal, cor):
     glEnd()
 
 
-def bresenham(cInicial, cFinal, cor, tamanho):
+def bresenham(cInicial, cFinal, cor):
     
     x1 = cInicial[0]
     y1 = cInicial[1]
@@ -196,7 +203,6 @@ def bresenham(cInicial, cFinal, cor, tamanho):
     glBegin(GL_POINTS)
     glColor3f(cor[0], cor[1], cor[2])
     if(dentro((x1, y1), cCanvas)):
-        glVertex2f(x1, y1)
         coresCanvas.append((x1, y1, cor, tamanho))
     
     if((x1 <= x2) & (y1 >= y2)): #1o quadrante
@@ -213,7 +219,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
@@ -224,7 +231,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
@@ -247,7 +255,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
@@ -258,7 +267,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
@@ -281,7 +291,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
@@ -292,7 +303,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
@@ -315,7 +327,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantX < 0:
                     pantX = pantX + dy2 
@@ -327,6 +340,8 @@ def bresenham(cInicial, cFinal, cor, tamanho):
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
                     glVertex2f(x, y)
+                    if (x, y, cor, tamanho) in coresCanvas:
+                        coresCanvas.remove((x, y, cor, tamanho))
                     coresCanvas.append((x, y, cor, tamanho))
                 if pantY < 0:
                     pantY = pantY + dx2 
@@ -337,16 +352,16 @@ def bresenham(cInicial, cFinal, cor, tamanho):
     
     glEnd()
 
-def quadrado(cInicial, cFinal, cor1, cor2, preenchimento, tamanho):
+def quadrado(cInicial, cFinal, cor1, cor2, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenham((x1, y1), (x1, y2), cor1, tamanho)
-    bresenham((x1, y2), (x2, y2), cor1, tamanho)
-    bresenham((x2, y2), (x2, y1), cor1, tamanho)
-    bresenham((x2, y1), (x1, y1), cor1, tamanho)
+    bresenham((x1, y1), (x1, y2), cor1)
+    bresenham((x1, y2), (x2, y2), cor1)
+    bresenham((x2, y2), (x2, y1), cor1)
+    bresenham((x2, y1), (x1, y1), cor1)
 
 def quadradoSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
     x1 = cInicial[0]
@@ -369,6 +384,16 @@ def triangulo(cInicial, cFinal, cor1, cor2, preenchimento):
     bresenham((int((x2 + x1)/2), y1), (x2, y2), cor1)
     bresenham((x1, y2), (x2, y2), cor1)
 
+def trianguloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+    x1 = cInicial[0]
+    y1 = cInicial[1]
+    x2 = cFinal[0]
+    y2 = cFinal[1]
+    
+    bresenhamSemGravar((int((x2 + x1)/2), y1), (x1, y2), cor1)
+    bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2), cor1)
+    bresenhamSemGravar((x1, y2), (x2, y2), cor1)
+
 def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
@@ -379,14 +404,22 @@ def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
     
     glColor3f(cor1[0], cor1[1], cor1[2])
     glBegin(GL_POINTS)
-    if(dentro((x2+x1, y2+y1), cCanvas)): glVertex2f(x2+x1, y2+y1)
-    if(dentro((x1-y2, x2+y1), cCanvas)): glVertex2f(x1-y2, x2+y1)
-    if(dentro((x1-y2, y1-x2), cCanvas)): glVertex2f(x1-y2, y1-x2)
-    if(dentro((x1-x2, y1-y2), cCanvas)): glVertex2f(x1-x2, y1-y2)
-    if(dentro((x1-x2, y1+y2), cCanvas)): glVertex2f(x1-x2, y1+y2)
-    if(dentro((x2+x1, y1-y2), cCanvas)): glVertex2f(x2+x1, y1-y2)
-    if(dentro((y2+x1, y1-x2), cCanvas)): glVertex2f(y2+x1, y1-x2)
-    if(dentro((y2+x1, x2+y1), cCanvas)): glVertex2f(y2+x1, x2+y1)
+    if(dentro((x2+x1, y2+y1), cCanvas)):
+        coresCanvas.append((x2+x1, y2+y1, cor1, tamanho))
+    if(dentro((x1-y2, x2+y1), cCanvas)):
+        coresCanvas.append((x1-y2, x2+y1, cor1, tamanho))
+    if(dentro((x1-y2, y1-x2), cCanvas)):
+        coresCanvas.append((x1-y2, y1-x2, cor1, tamanho))
+    if(dentro((x1-x2, y1-y2), cCanvas)):
+        coresCanvas.append((x1-x2, y1-y2, cor1, tamanho))
+    if(dentro((x1-x2, y1+y2), cCanvas)):
+        coresCanvas.append((x1-x2, y1+y2, cor1, tamanho))
+    if(dentro((x2+x1, y1-y2), cCanvas)):
+        coresCanvas.append((x2+x1, y1-y2, cor1, tamanho))
+    if(dentro((y2+x1, y1-x2), cCanvas)):
+        coresCanvas.append((y2+x1, y1-x2, cor1, tamanho))
+    if(dentro((y2+x1, x2+y1), cCanvas)):
+        coresCanvas.append((y2+x1, x2+y1, cor1, tamanho))
     
     while(y2 > x2):
         if(d < 0):
@@ -395,14 +428,74 @@ def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
             d += 2 * (x2 - y2) + 5
             y2 -= 1
         x2 += 1
-        if(dentro((x2+x1, y2+y1), cCanvas)): glVertex2f(x2+x1, y2+y1)
-        if(dentro((x1-y2, x2+y1), cCanvas)): glVertex2f(x1-y2, x2+y1)
-        if(dentro((x1-y2, y1-x2), cCanvas)): glVertex2f(x1-y2, y1-x2)
-        if(dentro((x1-x2, y1-y2), cCanvas)): glVertex2f(x1-x2, y1-y2)
-        if(dentro((x1-x2, y1+y2), cCanvas)): glVertex2f(x1-x2, y1+y2)
-        if(dentro((x2+x1, y1-y2), cCanvas)): glVertex2f(x2+x1, y1-y2)
-        if(dentro((y2+x1, y1-x2), cCanvas)): glVertex2f(y2+x1, y1-x2)
-        if(dentro((y2+x1, x2+y1), cCanvas)): glVertex2f(y2+x1, x2+y1)
+        if(dentro((x2+x1, y2+y1), cCanvas)):
+            coresCanvas.append((x2+x1, y2+y1, cor1, tamanho))
+        if(dentro((x1-y2, x2+y1), cCanvas)):
+            coresCanvas.append((x1-y2, x2+y1, cor1, tamanho))
+        if(dentro((x1-y2, y1-x2), cCanvas)):
+            coresCanvas.append((x1-y2, y1-x2, cor1, tamanho))
+        if(dentro((x1-x2, y1-y2), cCanvas)):
+            coresCanvas.append((x1-x2, y1-y2, cor1, tamanho))
+        if(dentro((x1-x2, y1+y2), cCanvas)):
+            coresCanvas.append((x1-x2, y1+y2, cor1, tamanho))
+        if(dentro((x2+x1, y1-y2), cCanvas)):
+            coresCanvas.append((x2+x1, y1-y2, cor1, tamanho))
+        if(dentro((y2+x1, y1-x2), cCanvas)):
+            coresCanvas.append((y2+x1, y1-x2, cor1, tamanho))
+        if(dentro((y2+x1, x2+y1), cCanvas)):
+            coresCanvas.append((y2+x1, x2+y1, cor1, tamanho))
     
+    glEnd()
+
+def circuloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+    x1 = cInicial[0]
+    y1 = cInicial[1]
+    x2 = 0
+    y2 = cFinal[1]
+    
+    d = 1 - y2
+    
+    glColor3f(cor1[0], cor1[1], cor1[2])
+    glBegin(GL_POINTS)
+    if(dentro((x2+x1, y2+y1), cCanvas)):
+        glVertex2f(x2+x1, y2+y1)
+    if(dentro((x1-y2, x2+y1), cCanvas)):
+        glVertex2f(x1-y2, x2+y1)
+    if(dentro((x1-y2, y1-x2), cCanvas)):
+        glVertex2f(x1-y2, y1-x2)
+    if(dentro((x1-x2, y1-y2), cCanvas)):
+        glVertex2f(x1-x2, y1-y2)
+    if(dentro((x1-x2, y1+y2), cCanvas)):
+        glVertex2f(x1-x2, y1+y2)
+    if(dentro((x2+x1, y1-y2), cCanvas)):
+        glVertex2f(x2+x1, y1-y2)
+    if(dentro((y2+x1, y1-x2), cCanvas)):
+        glVertex2f(y2+x1, y1-x2)
+    if(dentro((y2+x1, x2+y1), cCanvas)):
+        glVertex2f(y2+x1, x2+y1)
+    
+    while(y2 > x2):
+        if(d < 0):
+            d += (2 * x2) + 3
+        else:
+            d += 2 * (x2 - y2) + 5
+            y2 -= 1
+        x2 += 1
+        if(dentro((x2+x1, y2+y1), cCanvas)):
+            glVertex2f(x2+x1, y2+y1)
+        if(dentro((x1-y2, x2+y1), cCanvas)):
+            glVertex2f(x1-y2, x2+y1)
+        if(dentro((x1-y2, y1-x2), cCanvas)):
+            glVertex2f(x1-y2, y1-x2)
+        if(dentro((x1-x2, y1-y2), cCanvas)):
+            glVertex2f(x1-x2, y1-y2)
+        if(dentro((x1-x2, y1+y2), cCanvas)):
+            glVertex2f(x1-x2, y1+y2)
+        if(dentro((x2+x1, y1-y2), cCanvas)):
+            glVertex2f(x2+x1, y1-y2)
+        if(dentro((y2+x1, y1-x2), cCanvas)):
+            glVertex2f(y2+x1, y1-x2)
+        if(dentro((y2+x1, x2+y1), cCanvas)):
+            glVertex2f(y2+x1, x2+y1)
     
     glEnd()
