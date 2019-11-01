@@ -2,9 +2,13 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
+cor1 = (0, 0, 0)
+cor2 = (1, 1, 1)
+
 cCanvas = []
 
 tamanho = 1
+botaoMouse = -1
 
 coresCanvas = []
 
@@ -14,48 +18,66 @@ def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     else:
         return False
 
-def novoDesenho(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tam):
+def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas
     global tamanho
+    global cor1
+    global cor2
+    global botaoMouse
     
+    cor1 = c1
+    cor2 = c2
     cCanvas = canvas
     tamanho = tam
+    botaoMouse = botao
     
     glPointSize(tamanho)
     
     if(ferramenta == "reta"):
-        bresenham(coord1, coord2, cor1)
+        bresenham(coord1, coord2)
+    elif(ferramenta == "pipeta"):
+        pipeta(coord1)
     elif(ferramenta == "quadrado"):
-        quadrado(coord1, coord2, cor1, cor2, preenchimento)
+        quadrado(coord1, coord2, preenchimento)
     elif(ferramenta == "triangulo"):
-        triangulo(coord1, coord2, cor1, cor2, preenchimento)
+        triangulo(coord1, coord2, preenchimento)
     elif(ferramenta == "circulo"):
-        circulo(coord1, coord2, cor1, cor2, preenchimento)
+        circulo(coord1, coord2, preenchimento)
 
-def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, cor1, cor2, preenchimento, tam):
+def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas
     global tamanho
+    global cor1
+    global cor2
+    global botaoMouse
     
+    cor1 = c1
+    cor2 = c2
     cCanvas = canvas
     tamanho = tam
+    botaoMouse = botao
     
     glPointSize(tamanho)
     
     if(ferramenta == "reta"):
-        bresenhamSemGravar(coord1, coord2, cor1)
+        bresenhamSemGravar(coord1, coord2)
     elif(ferramenta == "quadrado"):
-        quadradoSemGravar(coord1, coord2, cor1, cor2, preenchimento)
+        quadradoSemGravar(coord1, coord2, preenchimento)
     elif(ferramenta == "triangulo"):
-        trianguloSemGravar(coord1, coord2, cor1, cor2, preenchimento)
+        trianguloSemGravar(coord1, coord2, preenchimento)
     elif(ferramenta == "circulo"):
-        circuloSemGravar(coord1, coord2, cor1, cor2, preenchimento)
+        circuloSemGravar(coord1, coord2, preenchimento)
         
-def bresenhamSemGravar(cInicial, cFinal, cor):
+def bresenhamSemGravar(cInicial, cFinal):
     
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
+    
+    if(botaoMouse == 0):
+        cor = cor1
+    else: cor = cor2
     
     glBegin(GL_POINTS)
     glColor3f(cor[0], cor[1], cor[2])
@@ -193,12 +215,16 @@ def bresenhamSemGravar(cInicial, cFinal, cor):
     glEnd()
 
 
-def bresenham(cInicial, cFinal, cor):
+def bresenham(cInicial, cFinal):
     
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
+    
+    if(botaoMouse == 0):
+        cor = cor1
+    else: cor = cor2
     
     glBegin(GL_POINTS)
     glColor3f(cor[0], cor[1], cor[2])
@@ -352,49 +378,49 @@ def bresenham(cInicial, cFinal, cor):
     
     glEnd()
 
-def quadrado(cInicial, cFinal, cor1, cor2, preenchimento):
+def quadrado(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenham((x1, y1), (x1, y2), cor1)
-    bresenham((x1, y2), (x2, y2), cor1)
-    bresenham((x2, y2), (x2, y1), cor1)
-    bresenham((x2, y1), (x1, y1), cor1)
+    bresenham((x1, y1), (x1, y2))
+    bresenham((x1, y2), (x2, y2))
+    bresenham((x2, y2), (x2, y1))
+    bresenham((x2, y1), (x1, y1))
 
-def quadradoSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+def quadradoSemGravar(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenhamSemGravar((x1, y1), (x1, y2), cor1)
-    bresenhamSemGravar((x1, y2), (x2, y2), cor1)
-    bresenhamSemGravar((x2, y2), (x2, y1), cor1)
-    bresenhamSemGravar((x2, y1), (x1, y1), cor1)
+    bresenhamSemGravar((x1, y1), (x1, y2))
+    bresenhamSemGravar((x1, y2), (x2, y2))
+    bresenhamSemGravar((x2, y2), (x2, y1))
+    bresenhamSemGravar((x2, y1), (x1, y1))
     
-def triangulo(cInicial, cFinal, cor1, cor2, preenchimento):
+def triangulo(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenham((int((x2 + x1)/2), y1), (x1, y2), cor1)
-    bresenham((int((x2 + x1)/2), y1), (x2, y2), cor1)
-    bresenham((x1, y2), (x2, y2), cor1)
+    bresenham((int((x2 + x1)/2), y1), (x1, y2))
+    bresenham((int((x2 + x1)/2), y1), (x2, y2))
+    bresenham((x1, y2), (x2, y2))
 
-def trianguloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+def trianguloSemGravar(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenhamSemGravar((int((x2 + x1)/2), y1), (x1, y2), cor1)
-    bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2), cor1)
-    bresenhamSemGravar((x1, y2), (x2, y2), cor1)
+    bresenhamSemGravar((int((x2 + x1)/2), y1), (x1, y2))
+    bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2))
+    bresenhamSemGravar((x1, y2), (x2, y2))
 
-def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
+def circulo(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
@@ -402,24 +428,28 @@ def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
     
     d = 1 - y2
     
-    glColor3f(cor1[0], cor1[1], cor1[2])
+    if(botaoMouse == 0):
+        cor = cor1
+    else: cor = cor2
+    
+    glColor3f(cor[0], cor[1], cor[2])
     glBegin(GL_POINTS)
     if(dentro((x2+x1, y2+y1), cCanvas)):
-        coresCanvas.append((x2+x1, y2+y1, cor1, tamanho))
+        coresCanvas.append((x2+x1, y2+y1, cor, tamanho))
     if(dentro((x1-y2, x2+y1), cCanvas)):
-        coresCanvas.append((x1-y2, x2+y1, cor1, tamanho))
+        coresCanvas.append((x1-y2, x2+y1, cor, tamanho))
     if(dentro((x1-y2, y1-x2), cCanvas)):
-        coresCanvas.append((x1-y2, y1-x2, cor1, tamanho))
+        coresCanvas.append((x1-y2, y1-x2, cor, tamanho))
     if(dentro((x1-x2, y1-y2), cCanvas)):
-        coresCanvas.append((x1-x2, y1-y2, cor1, tamanho))
+        coresCanvas.append((x1-x2, y1-y2, cor, tamanho))
     if(dentro((x1-x2, y1+y2), cCanvas)):
-        coresCanvas.append((x1-x2, y1+y2, cor1, tamanho))
+        coresCanvas.append((x1-x2, y1+y2, cor, tamanho))
     if(dentro((x2+x1, y1-y2), cCanvas)):
-        coresCanvas.append((x2+x1, y1-y2, cor1, tamanho))
+        coresCanvas.append((x2+x1, y1-y2, cor, tamanho))
     if(dentro((y2+x1, y1-x2), cCanvas)):
-        coresCanvas.append((y2+x1, y1-x2, cor1, tamanho))
+        coresCanvas.append((y2+x1, y1-x2, cor, tamanho))
     if(dentro((y2+x1, x2+y1), cCanvas)):
-        coresCanvas.append((y2+x1, x2+y1, cor1, tamanho))
+        coresCanvas.append((y2+x1, x2+y1, cor, tamanho))
     
     while(y2 > x2):
         if(d < 0):
@@ -429,25 +459,25 @@ def circulo(cInicial, cFinal, cor1, cor2, preenchimento):
             y2 -= 1
         x2 += 1
         if(dentro((x2+x1, y2+y1), cCanvas)):
-            coresCanvas.append((x2+x1, y2+y1, cor1, tamanho))
+            coresCanvas.append((x2+x1, y2+y1, cor, tamanho))
         if(dentro((x1-y2, x2+y1), cCanvas)):
-            coresCanvas.append((x1-y2, x2+y1, cor1, tamanho))
+            coresCanvas.append((x1-y2, x2+y1, cor, tamanho))
         if(dentro((x1-y2, y1-x2), cCanvas)):
-            coresCanvas.append((x1-y2, y1-x2, cor1, tamanho))
+            coresCanvas.append((x1-y2, y1-x2, cor, tamanho))
         if(dentro((x1-x2, y1-y2), cCanvas)):
-            coresCanvas.append((x1-x2, y1-y2, cor1, tamanho))
+            coresCanvas.append((x1-x2, y1-y2, cor, tamanho))
         if(dentro((x1-x2, y1+y2), cCanvas)):
-            coresCanvas.append((x1-x2, y1+y2, cor1, tamanho))
+            coresCanvas.append((x1-x2, y1+y2, cor, tamanho))
         if(dentro((x2+x1, y1-y2), cCanvas)):
-            coresCanvas.append((x2+x1, y1-y2, cor1, tamanho))
+            coresCanvas.append((x2+x1, y1-y2, cor, tamanho))
         if(dentro((y2+x1, y1-x2), cCanvas)):
-            coresCanvas.append((y2+x1, y1-x2, cor1, tamanho))
+            coresCanvas.append((y2+x1, y1-x2, cor, tamanho))
         if(dentro((y2+x1, x2+y1), cCanvas)):
-            coresCanvas.append((y2+x1, x2+y1, cor1, tamanho))
+            coresCanvas.append((y2+x1, x2+y1, cor, tamanho))
     
     glEnd()
 
-def circuloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
+def circuloSemGravar(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
@@ -455,7 +485,11 @@ def circuloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
     
     d = 1 - y2
     
-    glColor3f(cor1[0], cor1[1], cor1[2])
+    if(botaoMouse == 0):
+        cor = cor1
+    else: cor = cor2
+    
+    glColor3f(cor[0], cor[1], cor[2])
     glBegin(GL_POINTS)
     if(dentro((x2+x1, y2+y1), cCanvas)):
         glVertex2f(x2+x1, y2+y1)
@@ -499,3 +533,8 @@ def circuloSemGravar(cInicial, cFinal, cor1, cor2, preenchimento):
             glVertex2f(y2+x1, x2+y1)
     
     glEnd()
+
+def pipeta(coord):
+    x = coord[0]
+    y = coord[1]
+    return

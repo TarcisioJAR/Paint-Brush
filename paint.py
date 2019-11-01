@@ -55,9 +55,6 @@ coordCores = [  (590, 610, 15, 35), #preto
                 (790, 810, 40, 60), #cinzaAzulado
                 (815, 835, 40, 60)] #lavanda     
 
-cor1 = cores[0]
-cor2 = cores[10]
-
 coordBotoes = [ (24, 46, 17, 43), #lapis
                 (24, 46, 48, 71), #borracha
                 (65, 88, 17, 43), #balde
@@ -408,11 +405,11 @@ def drawCanvas():
             coordClica = coordMouse
             clickInicial = 0
         coordSolta = coordMouse
-        novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+        novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho, botaoMouse)
         estadoMouseAnterior = 0
     if(estadoMouse == 1 and estadoMouseAnterior == 0):  
         coordSolta = coordMouse
-        novoDesenho(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho)
+        novoDesenho(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho, botaoMouse)
         estadoMouseAnterior = 1
         clickInicial = 1
 
@@ -500,9 +497,11 @@ def mouse(botao, estado, x, y):
     global resize_direita
     global resize_clicado
     global estadoMouse
+    global botaoMouse
     
     coordMouse = [x, y]
     estadoMouse = estado
+    botaoMouse = botao
     
     if botao == GLUT_LEFT_BUTTON:
         if resize_clicado:
