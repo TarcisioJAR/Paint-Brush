@@ -14,6 +14,9 @@ coordsPintadas = []
 matrizCores = []
 matrizTamanhos = []
 
+#Coordenada do ultimo ponto que foi pintado (Utilizado na ferramenta lapis)
+ultimaCoord = -1
+
 #instancia matrizes
 for i in range(2000): #max 2000 colunas
     linhaC = []
@@ -36,6 +39,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
     global cor1
     global cor2
     global botaoMouse
+    global ultimaCoord
     
     cor1 = c1
     cor2 = c2
@@ -55,6 +59,9 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
         triangulo(coord1, coord2, preenchimento)
     elif(ferramenta == "circulo"):
         circulo(coord1, coord2, preenchimento)
+    elif(ferramenta == "lapis"):
+        ultimaCoord = -1
+    
 
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas
@@ -62,7 +69,7 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     global cor1
     global cor2
     global botaoMouse
-    
+    global ultimaCoord
     cor1 = c1
     cor2 = c2
     cCanvas = canvas
@@ -79,6 +86,10 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         trianguloSemGravar(coord1, coord2, preenchimento)
     elif(ferramenta == "circulo"):
         circuloSemGravar(coord1, coord2, preenchimento)
+    elif(ferramenta == "lapis"):
+        if ultimaCoord == -1: ultimaCoord = coord1
+        bresenham(ultimaCoord, coord2)
+        ultimaCoord = coord2
         
 def bresenhamSemGravar(cInicial, cFinal):
     
