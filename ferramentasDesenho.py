@@ -10,7 +10,19 @@ cCanvas = []
 tamanho = 1
 botaoMouse = -1
 
-coresCanvas = []
+coordsPintadas = []
+matrizCores = []
+matrizTamanhos = []
+
+#instancia matrizes
+for i in range(2000): #max 2000 colunas
+    linhaC = []
+    linhaT = []
+    for j in range(1000): #max 1000 linhas
+        linhaC.append([])
+        linhaT.append([])
+    matrizCores.append(linhaC)
+    matrizTamanhos.append(linhaT)
 
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
@@ -216,6 +228,8 @@ def bresenhamSemGravar(cInicial, cFinal):
 
 
 def bresenham(cInicial, cFinal):
+    global matrizCores
+    global matrizTamanhos
     
     x1 = cInicial[0]
     y1 = cInicial[1]
@@ -229,7 +243,11 @@ def bresenham(cInicial, cFinal):
     glBegin(GL_POINTS)
     glColor3f(cor[0], cor[1], cor[2])
     if(dentro((x1, y1), cCanvas)):
-        coresCanvas.append((x1, y1, cor, tamanho))
+        if (x1, y1) in coordsPintadas:
+            coordsPintadas.remove((x1, y1))
+        coordsPintadas.append((x1, y1))
+        matrizCores[x1][y1] = cor
+        matrizTamanhos[x1][y1] = tamanho
     
     if((x1 <= x2) & (y1 >= y2)): #1o quadrante
         dx    = x2 - x1
@@ -245,9 +263,11 @@ def bresenham(cInicial, cFinal):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -257,9 +277,11 @@ def bresenham(cInicial, cFinal):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -281,9 +303,11 @@ def bresenham(cInicial, cFinal):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -293,9 +317,11 @@ def bresenham(cInicial, cFinal):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -317,9 +343,11 @@ def bresenham(cInicial, cFinal):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -329,9 +357,11 @@ def bresenham(cInicial, cFinal):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -353,9 +383,11 @@ def bresenham(cInicial, cFinal):
         if(dydx2 < 0):
             for i in range(dx):
                 if(dentro((x, y), cCanvas)):
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantX < 0:
                     pantX = pantX + dy2 
                 else:
@@ -365,10 +397,11 @@ def bresenham(cInicial, cFinal):
         else:
             for i in range(dy):
                 if(dentro((x, y), cCanvas)):
-                    glVertex2f(x, y)
-                    if (x, y, cor, tamanho) in coresCanvas:
-                        coresCanvas.remove((x, y, cor, tamanho))
-                    coresCanvas.append((x, y, cor, tamanho))
+                    if (x, y) in coordsPintadas:
+                        coordsPintadas.remove((x, y))
+                    coordsPintadas.append((x, y))
+                    matrizCores[x][y] = cor
+                    matrizTamanhos[x][y] = tamanho
                 if pantY < 0:
                     pantY = pantY + dx2 
                 else:
@@ -435,21 +468,45 @@ def circulo(cInicial, cFinal, preenchimento):
     glColor3f(cor[0], cor[1], cor[2])
     glBegin(GL_POINTS)
     if(dentro((x2+x1, y2+y1), cCanvas)):
-        coresCanvas.append((x2+x1, y2+y1, cor, tamanho))
+        if (x2+x1, y2+y1) in coordsPintadas: coordsPintadas.remove((x2+x1, y2+y1))
+        coordsPintadas.append((x2+x1, y2+y1))
+        matrizCores[x2+x1][y2+y1] = cor
+        matrizTamanhos[x2+x1][y2+y1] = tamanho
     if(dentro((x1-y2, x2+y1), cCanvas)):
-        coresCanvas.append((x1-y2, x2+y1, cor, tamanho))
+        if (x1-y2, x2+y1) in coordsPintadas: coordsPintadas.remove((x1-y2, x2+y1))
+        coordsPintadas.append((x1-y2, x2+y1))
+        matrizCores[x1-y2][x2+y1] = cor
+        matrizTamanhos[x1-y2][x2+y1] = tamanho
     if(dentro((x1-y2, y1-x2), cCanvas)):
-        coresCanvas.append((x1-y2, y1-x2, cor, tamanho))
+        if (x1-y2, y1-x2) in coordsPintadas: coordsPintadas.remove((x1-y2, y1-x2))
+        coordsPintadas.append((x1-y2, y1-x2))
+        matrizCores[x1-y2][y1-x2] = cor
+        matrizTamanhos[x1-y2][y1-x2] = tamanho
     if(dentro((x1-x2, y1-y2), cCanvas)):
-        coresCanvas.append((x1-x2, y1-y2, cor, tamanho))
+        if (x1-x2, y1-y2) in coordsPintadas: coordsPintadas.remove((x1-x2, y1-y2))
+        coordsPintadas.append((x1-x2, y1-y2))
+        matrizCores[x1-x2][y1-y2] = cor
+        matrizTamanhos[x1-x2][y1-y2] = tamanho
     if(dentro((x1-x2, y1+y2), cCanvas)):
-        coresCanvas.append((x1-x2, y1+y2, cor, tamanho))
+        if (x1-x2, y1+y2) in coordsPintadas: coordsPintadas.remove((x1-x2, y1+y2))
+        coordsPintadas.append((x1-x2, y1+y2))
+        matrizCores[x1-x2][y1+y2] = cor
+        matrizTamanhos[x1-x2][y1+y2] = tamanho
     if(dentro((x2+x1, y1-y2), cCanvas)):
-        coresCanvas.append((x2+x1, y1-y2, cor, tamanho))
+        if (x2+x1, y1-y2) in coordsPintadas: coordsPintadas.remove((x2+x1, y1-y2))
+        coordsPintadas.append((x2+x1, y1-y2))
+        matrizCores[x2+x1][y1-y2] = cor
+        matrizTamanhos[x2+x1][y1-y2] = tamanho
     if(dentro((y2+x1, y1-x2), cCanvas)):
-        coresCanvas.append((y2+x1, y1-x2, cor, tamanho))
+        if (y2+x1, y1-x2) in coordsPintadas: coordsPintadas.remove((y2+x1, y1-x2))
+        coordsPintadas.append((y2+x1, y1-x2))
+        matrizCores[y2+x1][y1-x2] = cor
+        matrizTamanhos[y2+x1][y1-x2] = tamanho
     if(dentro((y2+x1, x2+y1), cCanvas)):
-        coresCanvas.append((y2+x1, x2+y1, cor, tamanho))
+        if (y2+x1, x2+y1) in coordsPintadas: coordsPintadas.remove((y2+x1, x2+y1))
+        coordsPintadas.append((y2+x1, x2+y1))
+        matrizCores[y2+x1][x2+y1] = cor
+        matrizTamanhos[y2+x1][x2+y1] = tamanho
     
     while(y2 > x2):
         if(d < 0):
@@ -459,21 +516,45 @@ def circulo(cInicial, cFinal, preenchimento):
             y2 -= 1
         x2 += 1
         if(dentro((x2+x1, y2+y1), cCanvas)):
-            coresCanvas.append((x2+x1, y2+y1, cor, tamanho))
+            if (x2+x1, y2+y1) in coordsPintadas: coordsPintadas.remove((x2+x1, y2+y1))
+            coordsPintadas.append((x2+x1, y2+y1))
+            matrizCores[x2+x1][y2+y1] = cor
+            matrizTamanhos[x2+x1][y2+y1] = tamanho
         if(dentro((x1-y2, x2+y1), cCanvas)):
-            coresCanvas.append((x1-y2, x2+y1, cor, tamanho))
+            if (x1-y2, x2+y1) in coordsPintadas: coordsPintadas.remove((x1-y2, x2+y1))
+            coordsPintadas.append((x1-y2, x2+y1))
+            matrizCores[x1-y2][x2+y1] = cor
+            matrizTamanhos[x1-y2][x2+y1] = tamanho
         if(dentro((x1-y2, y1-x2), cCanvas)):
-            coresCanvas.append((x1-y2, y1-x2, cor, tamanho))
+            if (x1-y2, y1-x2) in coordsPintadas: coordsPintadas.remove((x1-y2, y1-x2))
+            coordsPintadas.append((x1-y2, y1-x2))
+            matrizCores[x1-y2][y1-x2] = cor
+            matrizTamanhos[x1-y2][y1-x2] = tamanho
         if(dentro((x1-x2, y1-y2), cCanvas)):
-            coresCanvas.append((x1-x2, y1-y2, cor, tamanho))
+            if (x1-x2, y1-y2) in coordsPintadas: coordsPintadas.remove((x1-x2, y1-y2))
+            coordsPintadas.append((x1-x2, y1-y2))
+            matrizCores[x1-x2][y1-y2] = cor
+            matrizTamanhos[x1-x2][y1-y2] = tamanho
         if(dentro((x1-x2, y1+y2), cCanvas)):
-            coresCanvas.append((x1-x2, y1+y2, cor, tamanho))
+            if (x1-x2, y1+y2) in coordsPintadas: coordsPintadas.remove((x1-x2, y1+y2))
+            coordsPintadas.append((x1-x2, y1+y2))
+            matrizCores[x1-x2][y1+y2] = cor
+            matrizTamanhos[x1-x2][y1+y2] = tamanho
         if(dentro((x2+x1, y1-y2), cCanvas)):
-            coresCanvas.append((x2+x1, y1-y2, cor, tamanho))
+            if (x2+x1, y1-y2) in coordsPintadas: coordsPintadas.remove((x2+x1, y1-y2))
+            coordsPintadas.append((x2+x1, y1-y2))
+            matrizCores[x2+x1][y1-y2] = cor
+            matrizTamanhos[x2+x1][y1-y2] = tamanho
         if(dentro((y2+x1, y1-x2), cCanvas)):
-            coresCanvas.append((y2+x1, y1-x2, cor, tamanho))
+            if (y2+x1, y1-x2) in coordsPintadas: coordsPintadas.remove((y2+x1, y1-x2))
+            coordsPintadas.append((y2+x1, y1-x2))
+            matrizCores[y2+x1][y1-x2] = cor
+            matrizTamanhos[y2+x1][y1-x2] = tamanho
         if(dentro((y2+x1, x2+y1), cCanvas)):
-            coresCanvas.append((y2+x1, x2+y1, cor, tamanho))
+            if (y2+x1, x2+y1) in coordsPintadas: coordsPintadas.remove((y2+x1, x2+y1))
+            coordsPintadas.append((y2+x1, x2+y1))
+            matrizCores[y2+x1][x2+y1] = cor
+            matrizTamanhos[y2+x1][x2+y1] = tamanho
     
     glEnd()
 

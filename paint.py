@@ -462,14 +462,14 @@ def display():
             glVertex2f(coord[0]-1, coord[2])
             glEnd()
     
-    for c in coresCanvas:
-        glPointSize(c[3])
+    for c in coordsPintadas:
+        glPointSize(matrizTamanhos[c[0]][c[1]])
         glBegin(GL_POINTS)
-        glColor3f(c[2][0], c[2][1], c[2][2])
+        glColor3f(matrizCores[c[0]][c[1]][0], matrizCores[c[0]][c[1]][1], matrizCores[c[0]][c[1]][2])
         if(dentro((c[0], c[1]), coordCanvas)): glVertex(c[0], c[1])
-        else: coresCanvas.remove(c)
+        else: coordsPintadas.remove(c)
         glEnd()
-    
+        
     glutSwapBuffers()
   
 def reshape(l, a):
