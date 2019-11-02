@@ -69,8 +69,6 @@ ferramentas = [ "lapis", "borracha", "balde", "pipeta",
                 "reta", "curva", "circulo", "quadrado", "triangulo"]
                 
 ferramenta = "lapis"
-
-preenchimento = False
                 
 coordTamanhos = [   (408, 483, 17, 35), #pequeno
                     (408, 483, 36, 54), #medio

@@ -9,13 +9,12 @@ cor2 = (1, 1, 1)
 cCanvas = []
 
 tamanho = 1
+preenchimento = False
 botaoMouse = -1
 
 coordsPintadas = []
 matrizCores = []
 matrizTamanhos = []
-
-
 
 #Coordenada do ultimo ponto que foi pintado (Utilizado na ferramenta lapis)
 ultimaCoord = -1
@@ -38,18 +37,20 @@ def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     else:
         return False
 
-def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
+def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao):
     global cCanvas
     global tamanho
     global cor1
     global cor2
     global botaoMouse
     global ultimaCoord
+    global preenchimento
     
     cor1 = c1
     cor2 = c2
     cCanvas = canvas
     tamanho = tam
+    preenchimento = preench
     botaoMouse = botao
     
     glPointSize(tamanho)
@@ -57,11 +58,11 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
     if(ferramenta == "reta"):
         bresenham(coord1, coord2)
     elif(ferramenta == "quadrado"):
-        quadrado(coord1, coord2, preenchimento)
+        quadrado(coord1, coord2)
     elif(ferramenta == "triangulo"):
-        triangulo(coord1, coord2, preenchimento)
+        triangulo(coord1, coord2)
     elif(ferramenta == "circulo"):
-        circulo(coord1, coord2, preenchimento)
+        circulo(coord1, coord2)
     elif(ferramenta == "lapis"):
         ultimaCoord = -1
     elif(ferramenta == "borracha"):
@@ -87,11 +88,11 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     if(ferramenta == "reta"):
         bresenhamSemGravar(coord1, coord2)
     elif(ferramenta == "quadrado"):
-        quadradoSemGravar(coord1, coord2, preenchimento)
+        quadradoSemGravar(coord1, coord2)
     elif(ferramenta == "triangulo"):
-        trianguloSemGravar(coord1, coord2, preenchimento)
+        trianguloSemGravar(coord1, coord2)
     elif(ferramenta == "circulo"):
-        circuloSemGravar(coord1, coord2, preenchimento)
+        circuloSemGravar(coord1, coord2)
     elif(ferramenta == "lapis"):
         if ultimaCoord == -1: ultimaCoord = coord1
         bresenham(ultimaCoord, coord2)
@@ -99,7 +100,9 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     elif(ferramenta == "balde"):
         glutSetCursor(GLUT_CURSOR_WAIT)
         glutPostRedisplay()
-        pintar(coord1)
+        if(botaoMouse == 0):
+            pintar(coord1, cor1)
+        else: pintar(coord1, cor2)
         glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
         glutPostRedisplay()
     elif(ferramenta == "borracha"):
@@ -436,7 +439,7 @@ def bresenham(cInicial, cFinal):
     
     glEnd()
 
-def quadrado(cInicial, cFinal, preenchimento):
+def quadrado(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
@@ -446,8 +449,14 @@ def quadrado(cInicial, cFinal, preenchimento):
     bresenham((x1, y2), (x2, y2))
     bresenham((x2, y2), (x2, y1))
     bresenham((x2, y1), (x1, y1))
+    
+    if(preenchimento == True):
+        if(botaoMouse == 0):
+            pintar((int((x2 + x1)/2), int((y2 + y1)/2)), cor2)
+        elif(botaoMouse == 2):
+            pintar((int((x2 + x1)/2), int((y2 + y1)/2)), cor1)
 
-def quadradoSemGravar(cInicial, cFinal, preenchimento):
+def quadradoSemGravar(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
@@ -458,7 +467,7 @@ def quadradoSemGravar(cInicial, cFinal, preenchimento):
     bresenhamSemGravar((x2, y2), (x2, y1))
     bresenhamSemGravar((x2, y1), (x1, y1))
     
-def triangulo(cInicial, cFinal, preenchimento):
+def triangulo(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
@@ -467,8 +476,14 @@ def triangulo(cInicial, cFinal, preenchimento):
     bresenham((int((x2 + x1)/2), y1), (x1, y2))
     bresenham((int((x2 + x1)/2), y1), (x2, y2))
     bresenham((x1, y2), (x2, y2))
+    
+    if(preenchimento == True):
+        if(botaoMouse == 0):
+            pintar((int((x2 + x1)/2), int((y2 + y1)/2)), cor2)
+        elif(botaoMouse == 2):
+            pintar((int((x2 + x1)/2), int((y2 + y1)/2)), cor1)
 
-def trianguloSemGravar(cInicial, cFinal, preenchimento):
+def trianguloSemGravar(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = cFinal[0]
@@ -478,7 +493,7 @@ def trianguloSemGravar(cInicial, cFinal, preenchimento):
     bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2))
     bresenhamSemGravar((x1, y2), (x2, y2))
 
-def circulo(cInicial, cFinal, preenchimento):
+def circulo(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
@@ -582,8 +597,14 @@ def circulo(cInicial, cFinal, preenchimento):
             matrizTamanhos[y2+x1][x2+y1] = tamanho
     
     glEnd()
+    
+    if(preenchimento == True):
+        if(botaoMouse == 0):
+            pintar(cInicial, cor2)
+        elif(botaoMouse == 2):
+            pintar(cInicial, cor1)
 
-def circuloSemGravar(cInicial, cFinal, preenchimento):
+def circuloSemGravar(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
@@ -640,7 +661,7 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
     
     glEnd()
 
-def pintar(coord):
+def pintar(coord, cor):
     global cCanvas
     global total
     global corTrocada
@@ -655,10 +676,6 @@ def pintar(coord):
     y1 = -1
     elementosIteracao = [0,0,0,0, x, y, x1, y1]
     pilha.append(elementosIteracao)
-    
-    if(botaoMouse == 0):
-        cor = cor1
-    else: cor = cor2
     
     if (corTrocada == cor): return
     
@@ -725,7 +742,7 @@ def borracha(coord):
     y2 = coord[1] + tamanho*5
     
     cor1 = (0, 0, 0)
-    quadradoSemGravar((x1, y1), (x2, y2), False)
+    quadradoSemGravar((x1, y1), (x2, y2))
     
     for x in range(x2 - x1):
         for y in range(y2 - y1):
