@@ -14,8 +14,12 @@ coordsPintadas = []
 matrizCores = []
 matrizTamanhos = []
 
+
+
 #Coordenada do ultimo ponto que foi pintado (Utilizado na ferramenta lapis)
 ultimaCoord = -1
+
+corTrocada = []
 
 #instancia matrizes
 for i in range(2000): #max 2000 colunas
@@ -61,6 +65,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
         circulo(coord1, coord2, preenchimento)
     elif(ferramenta == "lapis"):
         ultimaCoord = -1
+
     
 
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
@@ -90,6 +95,8 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         if ultimaCoord == -1: ultimaCoord = coord1
         bresenham(ultimaCoord, coord2)
         ultimaCoord = coord2
+    elif(ferramenta == "balde"):
+        pintar(coord1, c1)
         
 def bresenhamSemGravar(cInicial, cFinal):
     
@@ -626,6 +633,75 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
     
     glEnd()
 
+
+def pintar(coord, cor):
+    global cCanvas
+    global total
+    pilha = []
+    visitados = [0,0,0,0]
+    x = coord[0]
+    y = coord[1]
+    x1 = -1
+    y1 = -1
+    elementosIteracao = [0,0,0,0, x, y, x1, y1]
+    pilha.append(elementosIteracao)
+    while(pilha != []):
+        elementosIteracao = pilha.pop()
+        #print("Tirou")
+        visitados[0] = elementosIteracao[0]
+        visitados[1] = elementosIteracao[1]
+        visitados[2] = elementosIteracao[2]
+        visitados[3] = elementosIteracao[3]
+        x = elementosIteracao[4]
+        y = elementosIteracao[5]
+        x1 = elementosIteracao[6]
+        y1 = elementosIteracao[7]
+        
+        if(dentro((x, y+1), cCanvas) and visitados[0] == 0 and matrizCores[x][y+1] == corTrocada and (x,y+1) != (x1,y1)):
+            #print("A")
+            glBegin(GL_POINTS)
+            glColor3f(cor[0],cor[1], cor[2])
+            coordsPintadas.append((x, y+1))
+            matrizCores[x][y+1] = cor
+            matrizTamanhos[x][y+1] = 1
+            glEnd()
+            visitados[0] = 1
+            pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
+            pilha.append([0, 0, 0, 0, x, y+1, x, y])
+            
+        elif(dentro((x+1, y), cCanvas) and visitados[1] == 0 and matrizCores[x+1][y] == corTrocada and (x+1,y) != (x1,y1)):
+            #print("B")
+            glBegin(GL_POINTS)
+            glColor3f(cor[0],cor[1], cor[2])
+            coordsPintadas.append((x+1, y))
+            matrizCores[x+1][y] = cor
+            matrizTamanhos[x+1][y] = 1
+            glEnd()
+            visitados[1] = 1
+            pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
+            pilha.append([0, 0, 0, 0, x+1, y, x, y])
+        elif(dentro((x, y-1), cCanvas) and visitados[2] == 0 and matrizCores[x][y-1] == corTrocada and (x,y-1) != (x1,y1)):
+            glBegin(GL_POINTS)
+            glColor3f(cor[0],cor[1], cor[2])
+            coordsPintadas.append((x, y-1))
+            matrizCores[x][y-1] = cor
+            matrizTamanhos[x][y-1] = 1
+            glEnd()
+            visitados[2] = 1
+            pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
+            pilha.append([0, 0, 0, 0, x, y-1, x, y])
+        elif(dentro((x-1, y), cCanvas) and visitados[3] == 0 and matrizCores[x-1][y] == corTrocada and (x-1,y) != (x1,y1)):
+            #print("D")
+            glBegin(GL_POINTS)
+            glColor3f(cor[0],cor[1], cor[2])
+            coordsPintadas.append((x-1, y))
+            matrizCores[x-1][y] = cor
+            matrizTamanhos[x-1][y] = 1
+            glEnd()
+            visitados[3] = 1
+            pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
+            pilha.append([0, 0, 0, 0, x-1, y, x, y])
+            
 def pipeta(coord):
     x = coord[0]
     y = coord[1]
