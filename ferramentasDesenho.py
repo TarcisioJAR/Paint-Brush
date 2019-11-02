@@ -95,7 +95,7 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         bresenham(ultimaCoord, coord2)
         ultimaCoord = coord2
     elif(ferramenta == "balde"):
-        pintar(coord1, c1)
+        pintar(coord1)
     elif(ferramenta == "borracha"):
         borracha(coord2)
         
@@ -635,7 +635,7 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
     glEnd()
 
 
-def pintar(coord, cor):
+def pintar(coord):
     global cCanvas
     global total
     pilha = []
@@ -646,6 +646,11 @@ def pintar(coord, cor):
     y1 = -1
     elementosIteracao = [0,0,0,0, x, y, x1, y1]
     pilha.append(elementosIteracao)
+    
+    if(botaoMouse == 0):
+        cor = cor1
+    else: cor = cor2
+    
     while(pilha != []):
         elementosIteracao = pilha.pop()
         #print("Tirou")
@@ -705,15 +710,20 @@ def pintar(coord, cor):
             
     
 def borracha(coord):
+    global cor1
     
-    x = coord[0]
-    y = coord[1]
+    x1 = coord[0] - tamanho*5
+    x2 = coord[0] + tamanho*5
+    y1 = coord[1] - tamanho*5
+    y2 = coord[1] + tamanho*5
     
-    x1 = coord[0] - tamanho*10
-    x2 = coord[0] + tamanho*10
-    y1 = coord[1] - tamanho*10
-    y2 = coord[1] + tamanho*10
+    cor1 = (0, 0, 0)
+    quadradoSemGravar((x1, y1), (x2, y2), False)
     
-    if (x, y) in coordsPintadas:
-        if dentro(coord, (x1, x2, y1, y2)):
-            coordsPintadas.remove((x, y))
+    for x in range(x2 - x1):
+        for y in range(y2 - y1):
+            if (x + x1, y + y1) in coordsPintadas:
+                if dentro((x+x1, y+y1), (x1, x2, y1, y2)):
+                    coordsPintadas.remove((x+x1, y+y1))
+                    matrizCores[x+x1][y+y1] = []
+                    matrizTamanhos[x+x1][y+y1] = []

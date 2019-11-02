@@ -483,7 +483,10 @@ def display():
         glBegin(GL_POINTS)
         glColor3f(matrizCores[c[0]][c[1]][0], matrizCores[c[0]][c[1]][1], matrizCores[c[0]][c[1]][2])
         if(dentro((c[0], c[1]), coordCanvas)): glVertex(c[0], c[1])
-        else: coordsPintadas.remove(c)
+        else:
+            coordsPintadas.remove(c)
+            matrizCores[c[0]][c[1]] = []
+            matrizTamanhos[c[0]][c[1]] = []
         glEnd()
         
     glutSwapBuffers()
