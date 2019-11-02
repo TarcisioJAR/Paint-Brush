@@ -95,7 +95,11 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         bresenham(ultimaCoord, coord2)
         ultimaCoord = coord2
     elif(ferramenta == "balde"):
+        glutSetCursor(GLUT_CURSOR_WAIT)
+        glutPostRedisplay()
         pintar(coord1)
+        glutSetCursor(GLUT_CURSOR_LEFT_ARROW)
+        glutPostRedisplay()
     elif(ferramenta == "borracha"):
         borracha(coord2)
         
@@ -476,7 +480,7 @@ def circulo(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
-    y2 = cFinal[1]
+    y2 = cFinal[1]>>2
     
     d = 1 - y2
     
@@ -581,7 +585,7 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
-    y2 = cFinal[1]
+    y2 = cFinal[1]/4
     
     d = 1 - y2
     
@@ -638,6 +642,9 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
 def pintar(coord):
     global cCanvas
     global total
+    global corTrocada
+    
+    corTrocada = matrizCores[coord[0]][coord[1]]
     pilha = []
     visitados = [0,0,0,0]
     x = coord[0]

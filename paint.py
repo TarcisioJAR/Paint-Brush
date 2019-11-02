@@ -617,7 +617,7 @@ def arraste(x,y):
         coordRedimensionar[2][0] = x + 3 #sudeste
         coordRedimensionar[1][0] = x + 3 #leste
         
-    glutPostRedisplay() 
+    glutPostRedisplay()
     
  
 #configuracao da janela
