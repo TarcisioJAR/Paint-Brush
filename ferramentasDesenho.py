@@ -1,6 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import numpy
 
 cor1 = (0, 0, 0)
 cor2 = (1, 1, 1)
@@ -65,8 +66,9 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
         ultimaCoord = -1
     elif(ferramenta == "borracha"):
         borracha(coord1)
+    elif(ferramenta == "curva"):
+        bezier(coord1, (coord1[0]*3, coord1[1]*3), (coord2[0], coord2[1]*3), coord2)
     
-
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas
     global tamanho
@@ -734,3 +736,19 @@ def borracha(coord):
                     coordsPintadas.remove((x+x1, y+y1))
                     matrizCores[x+x1][y+y1] = []
                     matrizTamanhos[x+x1][y+y1] = []
+    
+def bezier(p1,p2,p3,p4):
+    for t in numpy.arange(0,1,0.01):
+        omt  = 1-t
+        omt2 = omt*omt	
+        omt3 = omt2*omt		
+        t2   = t*t
+        t3   = t2*t
+        x    = omt3 * p1[0] + ((3*omt2)*t*p1[0]) + (3*omt*t2*p3[0])+t3*p4[0]
+        y    = omt3 * p1[1] + ((3*omt2)*t*p1[1]) + (3*omt*t2*p3[1])+t3*p4[1]
+        x    = int(numpy.floor(x))
+        y    = int(numpy.floor(y))
+        
+        coordsPintadas.append((x, y))
+        matrizCores[x][y] = cor1
+        matrizTamanhos[x][y] = tamanho
