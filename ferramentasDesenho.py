@@ -640,11 +640,11 @@ def circuloSemGravar(cInicial, cFinal, preenchimento):
     
     glEnd()
 
-
 def pintar(coord):
     global cCanvas
     global total
     global corTrocada
+    global l
     
     corTrocada = matrizCores[coord[0]][coord[1]]
     pilha = []
@@ -660,9 +660,10 @@ def pintar(coord):
         cor = cor1
     else: cor = cor2
     
+    if (corTrocada == cor): return
+    
     while(pilha != []):
         elementosIteracao = pilha.pop()
-        #print("Tirou")
         visitados[0] = elementosIteracao[0]
         visitados[1] = elementosIteracao[1]
         visitados[2] = elementosIteracao[2]
@@ -673,7 +674,6 @@ def pintar(coord):
         y1 = elementosIteracao[7]
         
         if(dentro((x, y+1), cCanvas) and visitados[0] == 0 and matrizCores[x][y+1] == corTrocada and (x,y+1) != (x1,y1)):
-            #print("A")
             glBegin(GL_POINTS)
             glColor3f(cor[0],cor[1], cor[2])
             coordsPintadas.append((x, y+1))
@@ -685,7 +685,6 @@ def pintar(coord):
             pilha.append([0, 0, 0, 0, x, y+1, x, y])
             
         elif(dentro((x+1, y), cCanvas) and visitados[1] == 0 and matrizCores[x+1][y] == corTrocada and (x+1,y) != (x1,y1)):
-            #print("B")
             glBegin(GL_POINTS)
             glColor3f(cor[0],cor[1], cor[2])
             coordsPintadas.append((x+1, y))
@@ -706,7 +705,6 @@ def pintar(coord):
             pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
             pilha.append([0, 0, 0, 0, x, y-1, x, y])
         elif(dentro((x-1, y), cCanvas) and visitados[3] == 0 and matrizCores[x-1][y] == corTrocada and (x-1,y) != (x1,y1)):
-            #print("D")
             glBegin(GL_POINTS)
             glColor3f(cor[0],cor[1], cor[2])
             coordsPintadas.append((x-1, y))
