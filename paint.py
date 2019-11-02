@@ -381,14 +381,28 @@ def drawRedimensionar():
     glVertex2f(coordRedimensionar[1][0], coordRedimensionar[1][1])
     glVertex2f(coordRedimensionar[2][0], coordRedimensionar[2][1])
     glEnd()
-
-
+    
+def pipeta(coord):
+    global cor1
+    global cor2
+    
+    cor = matrizCores[coord[0]][coord[1]]
+    
+    if(botaoMouse == 0):
+        if(cor != []): cor1 = cor
+        else: cor1 = (1, 1, 1)
+    elif(botaoMouse == 2):
+        if(cor != []): cor2 = cor
+        else: cor2 = (1, 1, 1)
+    
 def drawCanvas():
     global coordCanvas
     global coordClica
     global coordSolta
     global estadoMouseAnterior
     global clickInicial
+    global cor1
+    global cor2
     
     glColor3f(1, 1, 1)
     glBegin(GL_QUADS)
@@ -406,6 +420,8 @@ def drawCanvas():
             clickInicial = 0
         coordSolta = coordMouse
         novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho, botaoMouse)
+        if(ferramenta == "pipeta"):
+            pipeta(coordSolta)
         estadoMouseAnterior = 0
     if(estadoMouse == 1 and estadoMouseAnterior == 0):  
         coordSolta = coordMouse
@@ -558,20 +574,6 @@ def mouse(botao, estado, x, y):
                 cor1 = cor
             elif(botao == 2):
                 cor2 = cor
-        
-        glBegin(GL_QUADS)
-        glColor3f(cor1[0], cor1[1], cor1[2])
-        glVertex2f(508, 20)
-        glVertex2f(508, 50)
-        glVertex2f(538, 50)
-        glVertex2f(538, 20)
-        
-        glColor3f(cor2[0], cor2[1], cor2[2])
-        glVertex2f(548, 20)
-        glVertex2f(548, 50)
-        glVertex2f(578, 50)
-        glVertex2f(578, 20)
-        glEnd()
     
     glutPostRedisplay()
     

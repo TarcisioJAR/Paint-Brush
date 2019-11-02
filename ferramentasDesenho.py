@@ -55,8 +55,6 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
     
     if(ferramenta == "reta"):
         bresenham(coord1, coord2)
-    elif(ferramenta == "pipeta"):
-        pipeta(coord1)
     elif(ferramenta == "quadrado"):
         quadrado(coord1, coord2, preenchimento)
     elif(ferramenta == "triangulo"):
@@ -65,7 +63,8 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, 
         circulo(coord1, coord2, preenchimento)
     elif(ferramenta == "lapis"):
         ultimaCoord = -1
-
+    elif(ferramenta == "borracha"):
+        borracha(coord1)
     
 
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
@@ -97,6 +96,8 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         ultimaCoord = coord2
     elif(ferramenta == "balde"):
         pintar(coord1, c1)
+    elif(ferramenta == "borracha"):
+        borracha(coord2)
         
 def bresenhamSemGravar(cInicial, cFinal):
     
@@ -702,7 +703,17 @@ def pintar(coord, cor):
             pilha.append([visitados[0], visitados[1], visitados[2], visitados[3], x, y, x1, y1])
             pilha.append([0, 0, 0, 0, x-1, y, x, y])
             
-def pipeta(coord):
+    
+def borracha(coord):
+    
     x = coord[0]
     y = coord[1]
-    return
+    
+    x1 = coord[0] - tamanho*10
+    x2 = coord[0] + tamanho*10
+    y1 = coord[1] - tamanho*10
+    y2 = coord[1] + tamanho*10
+    
+    if (x, y) in coordsPintadas:
+        if dentro(coord, (x1, x2, y1, y2)):
+            coordsPintadas.remove((x, y))
