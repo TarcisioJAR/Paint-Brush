@@ -502,9 +502,14 @@ def triangulo(cInicial, cFinal):
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenham((int((x2 + x1)/2), y1), (x1, y2))
-    bresenham((int((x2 + x1)/2), y1), (x2, y2))
-    bresenham((x1, y2), (x2, y2))
+    if (y2 < y1):
+        bresenham((x1,y1), (x2,y1))
+        bresenham((x1,y1), (int(x1+(x2-x1)/2) if x2>x1 else int(x2+(x1-x2)/2), y2))
+        bresenham((x2,y1), (int(x1+(x2-x1)/2) if x2>x1 else int(x2+(x1-x2)/2), y2))
+    else:
+        bresenham((int((x2 + x1)/2), y1), (x1, y2))
+        bresenham((int((x2 + x1)/2), y1), (x2, y2))
+        bresenham((x1, y2), (x2, y2))
     
     if(preenchimento == True):
         if(botaoMouse == 0):
@@ -518,9 +523,14 @@ def trianguloSemGravar(cInicial, cFinal):
     x2 = cFinal[0]
     y2 = cFinal[1]
     
-    bresenhamSemGravar((int((x2 + x1)/2), y1), (x1, y2))
-    bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2))
-    bresenhamSemGravar((x1, y2), (x2, y2))
+    if (y2 < y1):
+        bresenhamSemGravar((x1,y1), (x2,y1))
+        bresenhamSemGravar((x1,y1), (int(x1+(x2-x1)/2) if x2>x1 else int(x2+(x1-x2)/2), y2))
+        bresenhamSemGravar((x2,y1), (int(x1+(x2-x1)/2) if x2>x1 else int(x2+(x1-x2)/2), y2))
+    else:
+        bresenhamSemGravar((int((x2 + x1)/2), y1), (x1, y2))
+        bresenhamSemGravar((int((x2 + x1)/2), y1), (x2, y2))
+        bresenhamSemGravar((x1, y2), (x2, y2))
 
 def circulo(cInicial, cFinal):
     x1 = cInicial[0]
@@ -637,7 +647,7 @@ def circuloSemGravar(cInicial, cFinal):
     x1 = cInicial[0]
     y1 = cInicial[1]
     x2 = 0
-    y2 = cFinal[1]/4
+    y2 = cFinal[1]>>2
     
     d = 1 - y2
     

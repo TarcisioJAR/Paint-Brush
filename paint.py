@@ -393,6 +393,7 @@ def pipeta(coord):
         if(cor != []): cor2 = cor
         else: cor2 = (1, 1, 1)
     
+
 def drawCanvas():
     global coordCanvas
     global coordClica
@@ -412,9 +413,10 @@ def drawCanvas():
     
     drawRedimensionar()
     
-    if(estadoMouse == 0 and dentro(coordMouse, coordCanvas)):
+    if(estadoMouse == 0):
         if clickInicial:
             coordClica = coordMouse
+            if not dentro(coordMouse, coordCanvas): return
             clickInicial = 0
         coordSolta = coordMouse
         novoDesenhoSemGravar(ferramenta, coordCanvas, coordClica, coordSolta, cor1, cor2, preenchimento, tamanho, botaoMouse)
