@@ -12,14 +12,14 @@ tamanho = 1
 preenchimento = False
 botaoMouse = -1
 
-coordsPintadas = []
-matrizCores = []
-matrizTamanhos = []
-
 #Coordenada do ultimo ponto que foi pintado (Utilizado na ferramenta lapis)
 ultimaCoord = -1
 
 corTrocada = []
+
+coordsPintadas = []
+matrizCores = []
+matrizTamanhos = []
 
 #instancia matrizes
 for i in range(2000): #max 2000 colunas
@@ -30,6 +30,12 @@ for i in range(2000): #max 2000 colunas
         linhaT.append([])
     matrizCores.append(linhaC)
     matrizTamanhos.append(linhaT)
+
+p1 = []
+p2 = []
+p3 = []
+p4 = []
+estadoCurva = 0 #0 = nao tem nada, 1 = definiu p1 e p4, 2 = definiu p2 e 3 = definiu p3
 
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
@@ -45,6 +51,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao)
     global botaoMouse
     global ultimaCoord
     global preenchimento
+    global estadoCurva
     
     cor1 = c1
     cor2 = c2
@@ -68,7 +75,13 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao)
     elif(ferramenta == "borracha"):
         borracha(coord1)
     elif(ferramenta == "curva"):
-        bezier(coord1, (coord1[0]*3, coord1[1]*3), (coord2[0], coord2[1]*3), coord2)
+        if(estadoCurva == 0):
+            estadoCurva = 1
+        #elif(estadoCurva == 1):
+        #    estadoCurva = 2
+        elif(estadoCurva == 1):
+            bezier(p1, p2, p2, p4)
+            estadoCurva = 0
     
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas
@@ -77,6 +90,10 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     global cor2
     global botaoMouse
     global ultimaCoord
+    global p1
+    global p2
+    global p3
+    global p4
     cor1 = c1
     cor2 = c2
     cCanvas = canvas
@@ -108,8 +125,18 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     elif(ferramenta == "borracha"):
         borracha(coord2)
     elif(ferramenta == "curva"):
-        bezierSemGravar(coord1, (coord1[0]*3, coord1[1]*3), (coord2[0], coord2[1]*3), coord2)
-        
+        if (estadoCurva == 0):
+            p1 = coord1
+            p4 = coord2
+            bresenhamSemGravar(p1, p4)
+        elif(estadoCurva == 1):
+            p2 = coord2
+            bezierSemGravar(p1, p2, p2, p4)
+        #elif(estadoCurva == 2):
+        #    p3 = coord2
+        #    bezierSemGravar(p1, p2, p3, p4)
+            
+    
 def bresenhamSemGravar(cInicial, cFinal):
     
     x1 = cInicial[0]
@@ -755,18 +782,22 @@ def borracha(coord):
                     matrizTamanhos[x+x1][y+y1] = []
 
 def bezierSemGravar(p1,p2,p3,p4):
+    x = p1[0]
+    y = p1[1]
     for t in numpy.arange(0,1,0.01):
         omt  = 1-t
         omt2 = omt*omt	
         omt3 = omt2*omt		
         t2   = t*t
         t3   = t2*t
+        xAnterior = x
+        yAnterior = y
         x    = omt3 * p1[0] + ((3*omt2)*t*p1[0]) + (3*omt*t2*p3[0])+t3*p4[0]
         y    = omt3 * p1[1] + ((3*omt2)*t*p1[1]) + (3*omt*t2*p3[1])+t3*p4[1]
         x    = int(numpy.floor(x))
         y    = int(numpy.floor(y))
         
-        bresenhamSemGravar(p1, p4)
+        bresenhamSemGravar((xAnterior, yAnterior), (x, y))
     
 def bezier(p1,p2,p3,p4):
     x = p1[0]
