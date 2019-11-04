@@ -413,6 +413,11 @@ def drawCanvas():
     
     drawRedimensionar()
     
+    glPointSize(tamanho)
+    
+    if(pegaEstado() == 1) & (arrasteCurva() == False):
+        bresenhamSemGravar(p1(), p4())
+    
     if(estadoMouse == 0):
         if clickInicial:
             coordClica = coordMouse

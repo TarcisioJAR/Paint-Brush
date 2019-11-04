@@ -36,12 +36,27 @@ p2 = []
 p3 = []
 p4 = []
 estadoCurva = 0 #0 = nao tem nada, 1 = definiu p1 e p4, 2 = definiu p2 e 3 = definiu p3
+arrasteCurva = False
 
 def dentro(coord1, coord2): #coord2 = (x1, x2, y1, y2)
     if(coord1[0] > coord2[0]) & (coord1[0] < coord2[1]) & (coord1[1] > coord2[2]) & (coord1[1] < coord2[3]):
         return True
     else:
         return False
+
+def pegaEstado():
+    return estadoCurva
+    
+def arrasteCurva():
+    if(arrasteCurva == True):
+        return True
+    else: return False
+
+def p1():
+    return p1
+
+def p4():
+    return p4
 
 def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao):
     global cCanvas
@@ -52,6 +67,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao)
     global ultimaCoord
     global preenchimento
     global estadoCurva
+    global arrasteCurva
     
     cor1 = c1
     cor2 = c2
@@ -80,6 +96,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao)
         #elif(estadoCurva == 1):
         #    estadoCurva = 2
         elif(estadoCurva == 1):
+            arrasteCurva = False
             bezier(p1, p2, p2, p4)
             estadoCurva = 0
     
@@ -94,6 +111,8 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
     global p2
     global p3
     global p4
+    global arrasteCurva
+    
     cor1 = c1
     cor2 = c2
     cCanvas = canvas
@@ -132,6 +151,7 @@ def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimen
         elif(estadoCurva == 1):
             p2 = coord2
             bezierSemGravar(p1, p2, p2, p4)
+            arrasteCurva = True
         #elif(estadoCurva == 2):
         #    p3 = coord2
         #    bezierSemGravar(p1, p2, p3, p4)
