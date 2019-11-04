@@ -99,6 +99,7 @@ def novoDesenho(ferramenta, canvas, coord1, coord2, c1, c2, preench, tam, botao)
             arrasteCurva = False
             bezier(p1, p2, p2, p4)
             estadoCurva = 0
+            
     
 def novoDesenhoSemGravar(ferramenta, canvas, coord1, coord2, c1, c2, preenchimento, tam, botao):
     global cCanvas

@@ -484,9 +484,9 @@ def display():
             glEnd()
     
     for c in coordsPintadas:
-        glPointSize(matrizTamanhos[c[0]][c[1]])
+        if(matrizTamanhos[c[0]][c[1]] != []): glPointSize(matrizTamanhos[c[0]][c[1]])
         glBegin(GL_POINTS)
-        glColor3f(matrizCores[c[0]][c[1]][0], matrizCores[c[0]][c[1]][1], matrizCores[c[0]][c[1]][2])
+        if(matrizCores[c[0]][c[1]] != []): glColor3f(matrizCores[c[0]][c[1]][0], matrizCores[c[0]][c[1]][1], matrizCores[c[0]][c[1]][2])
         if(dentro((c[0], c[1]), coordCanvas)): glVertex(c[0], c[1])
         else:
             coordsPintadas.remove(c)
